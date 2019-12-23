@@ -1,0 +1,49 @@
+MariaDB [belajar]> select * from nilai_mahasiswa;
++----------+------------------+------------+------------+------------+
+| nim      | nama             | semester_1 | semester_2 | semester_3 |
++----------+------------------+------------+------------+------------+
+| 17080305 | Rina Kumala Sari |       3.45 |       2.56 |       3.67 |
+| 17090113 | Riana Putria     |       3.12 |       2.98 |       3.45 |
+| 17090308 | Christine Wijaya |       3.78 |       3.23 |       3.11 |
+| 17140099 | Jojon Miharja    |       3.59 |       3.87 |       4.00 |
+| 17140119 | Sandri Fatmala   |       2.12 |       2.78 |       2.56 |
+| 17140143 | Rudi Permana     |       2.56 |       3.14 |       3.22 |
++----------+------------------+------------+------------+------------+
+6 rows in set (0.000 sec)
+
+MariaDB [belajar]> delimiter //
+MariaDB [belajar]> create procedure penilaian(nim_mhs char(8))
+    -> begin
+    -> declare nilai_ip decimal (4,2) default 0;
+    -> select semester_1 into nilai_ip from nilai_mahasiswa where nim=nim_mhs;
+    -> case
+    -> when (nilai_ip =0) then select 'Mendingan DO aja';
+    -> when (nilai_ip <=1.00) then select 'Serius Kuliah gak sih?';
+    -> when (nilai_ip <=2.00) then select 'Kebanyakan main';
+    -> when (nilai_ip <=3.00) then select 'Berusaha lagi';
+    -> when (nilai_ip <=4.00) then select 'Mantap, Pertahankan!';
+    -> else select 'Nilai IP salah';
+    -> end case;
+    -> end//
+Query OK, 0 rows affected (0.020 sec)
+
+MariaDB [belajar]> delimiter ;
+MariaDB [belajar]> call penilaian('17080305');
++----------------------+
+| Mantap, Pertahankan! |
++----------------------+
+| Mantap, Pertahankan! |
++----------------------+
+1 row in set (0.004 sec)
+
+Query OK, 1 row affected (0.008 sec)
+
+MariaDB [belajar]> call penilaian('17140143');
++---------------+
+| Berusaha lagi |
++---------------+
+| Berusaha lagi |
++---------------+
+1 row in set (0.001 sec)
+
+Query OK, 1 row affected (0.005 sec)
